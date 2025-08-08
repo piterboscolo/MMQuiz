@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jornada de Estudos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Estilo do botão de logout */
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            color: #333;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        .logout-btn:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .header-content {
+            position: relative;
+            padding: 40px 20px 20px;
+            text-align: center;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 0 auto 15px;
+            max-width: 90%;
+        }
+        .logo-container img {
+            height: 120px;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+        }
+        .start-btn.locked {
+            background-color: #f0f0f0;
+            color: #999;
+            cursor: not-allowed;
+            border: 1px solid #ddd;
+        }
+        .start-btn.locked i {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        console.log('Verificação de autenticação iniciada');
+        
+        function checkAuth() {
+            const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+            console.log('Status de autenticação:', isAuthenticated);
+            
+            if (!isAuthenticated) {
+                console.log('Usuário não autenticado, redirecionando para access.html');
+                window.location.href = 'access.html';
+            } else {
+                console.log('Usuário autenticado, continuando...');
+            }
+        }
+        
+        // Verifica se o DOM já está carregado
+        if (document.readyState === 'loading') {
+            console.log('Aguardando DOM carregar (index)...');
+            document.addEventListener('DOMContentLoaded', checkAuth);
+        } else {
+            console.log('DOM já está carregado, verificando autenticação...');
+            checkAuth();
+        }
+    </script>
+    <div class="stars"></div>
+    <div class="container">
+        <!-- Tela Inicial -->
+        <div id="startScreen">
+            <header class="header-animation">
+                <div class="header-content">
+                    <button id="logoutBtn" class="logout-btn" title="Sair">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
+                    <div class="logo-container">
+                        <img src="img/logo.png.png" alt="MMQuiz Logo">
+                        <h1 style="color: #333;">Jornada de Estudos</h1>
+                    </div>
+                    <p class="subtitle">MMQuiz ajudando você a conquistar seus objetivos!! <i class="fas fa-pencil-alt"></i></p>
+                </div>
+            </header>
+        </div>
+
+        <!-- Tela do Quiz -->
+        <div id="quizContainer" style="display: none;">
+            <div class="quiz-header">
+                <div class="quiz-header-top">
+                    <button id="closeQuizBtn" class="quiz-nav-btn" title="Fechar Quiz">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="question-counter">
+                        <span id="questionNumber">1</span> / <span id="totalQuestions">10</span>
+                    </div>
+                    <button id="restartQuizBtn" class="quiz-nav-btn" title="Recomeçar Quiz">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                </div>
+                <h2 id="quizTitle">Quiz</h2>
+            </div>
+            
+            <div class="quiz-content">
+                <p id="questionText"></p>
+                <div id="optionsContainer" class="options-container"></div>
+                
+                <div id="explanationContainer" style="margin-top: 20px; display: none;">
+                    <div class="explanation-box">
+                        <h4>Explicação:</h4>
+                        <p id="explanationText"></p>
+                        <p class="fun-fact" id="funFactText"></p>
+                    </div>
+                </div>
+                
+                <button id="nextButton" class="next-btn" style="display: none; margin-top: 20px;">
+                    Próxima Pergunta <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Tela de Resultados -->
+        <div id="resultContainer" style="display: none; text-align: center; color: white;">
+            <h2>Quiz Concluído!</h2>
+            <div class="score-display">
+                <p>Sua pontuação:</p>
+                <div class="score-circle">
+                    <span id="score">0/0</span>
+                </div>
+            </div>
+            <p id="resultMessage" style="margin: 20px 0;"></p>
+            <div class="result-buttons">
+                <button id="homeButton" class="result-button" style="background-color: #3498db;">
+                    <i class="fas fa-home"></i> Início
+                </button>
+                <button id="restartButton" class="result-button" style="background-color: #2ecc71;">
+                    <i class="fas fa-redo"></i> Jogar Novamente
+                </button>
+                <button id="chooseQuizButton" class="result-button" style="background-color: #f39c12;">
+                    <i class="fas fa-list"></i> Escolher Outro Quiz
+                </button>
+            </div>
+        </div>
+
+        <div class="game-intro">
+            <p>Escolha a matéria e faça sua revisão!</p>
+        </div>
+
+
+        <div class="game-board">
+            <div class="path" id="historia-quiz">
+                <div class="path-header" style="background: linear-gradient(135deg, #4CAF50, #2E7D32);">
+                    <i class="fas fa-landmark"></i>
+                    <h3>Direito Penal</h3>
+                </div>
+                <div class="path-content">
+                    <p>Semana 01 de Provas!</p>
+                    <button class="start-btn locked" data-path="historia" disabled>
+                        <i class="fas fa-lock"></i> Bloqueado
+                    </button>
+                </div>
+            </div>
+
+            <div class="path" id="ciencias-quiz">
+                <div class="path-header" style="background: linear-gradient(135deg, #2196F3, #1565C0);">
+                    <i class="fas fa-flask"></i>
+                    <h3>Ciências</h3>
+                </div>
+                <div class="path-content">
+                    <p>Explore o incrível mundo da ciência!</p>
+                    <button class="start-btn locked" data-path="ciencias" disabled>
+                        <i class="fas fa-lock"></i> Bloqueado
+                    </button>
+                </div>
+            </div>
+
+            <div class="path" id="portugues-quiz">
+                <div class="path-header" style="background: linear-gradient(135deg, #9C27B0, #6A1B9A);">
+                    <i class="fas fa-book"></i>
+                    <h3>Português</h3>
+                </div>
+                <div class="path-content">
+                    <p>Aventuras no mundo das palavras!</p>
+                    <button class="start-btn locked" data-path="portugues" disabled>
+                        <i class="fas fa-lock"></i> Bloqueado
+                    </button>
+                </div>
+            </div>
+
+            <div class="path" id="geografia-quiz">
+                <div class="path-header" style="background: linear-gradient(135deg, #FF9800, #EF6C00);">
+                    <i class="fas fa-globe-americas"></i>
+                    <h3>Geografia</h3>
+                </div>
+                <div class="path-content">
+                    <p>Conheça nosso planeta incrível!</p>
+                    <button class="start-btn locked" data-path="geografia" disabled>
+                        <i class="fas fa-lock"></i> Bloqueado
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Os modais foram movidos para a estrutura principal do quiz -->
+    </div>
+
+    <script src="js/game.js"></script>
+    <script>
+        // Gerenciamento do logout
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoutBtn = document.getElementById('logoutBtn');
+            
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Remove a autenticação
+                    localStorage.removeItem('isAuthenticated');
+                    // Redireciona para a página de acesso
+                    window.location.href = 'access.html';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
